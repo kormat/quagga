@@ -1,0 +1,13 @@
+#!/bin/bash
+set -eu
+
+if [ "$1" = "configure" ]; then
+  # Set permissions to allow quagga daemons and vtysh to write config files.
+  dpkg-statoverride --list /etc/quagga || \
+  dpkg-statoverride --add --update quagga quaggavty 775 /etc/quagga
+fi
+
+# remove symlinks to /etc/init.d/quagga from runlevels
+update-rc.d -f quagga remove
+
+#DEBHELPER#

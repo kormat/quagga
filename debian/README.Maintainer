@@ -1,0 +1,33 @@
+#
+# Filename transition from zebra to quagga
+#
+
+Files that keep their names
+	/usr/bin/vtysh
+
+Files that got an -pj suffix
+	/etc/default/zebra	-> /etc/quagga/debian.conf
+	/etc/init.d/zebra	-> /etc/init.d/quagga
+	/etc/zebra/		-> /etc/quagga/
+	/usr/share/doc/zebra/	-> /usr/share/doc/quagga/
+	/var/log/zebra/		-> /var/log/quagga/
+	/var/run/ 		-> /var/run/quagga/
+
+Files that were moved
+	/usr/sbin/*		-> /usr/lib/quagga/
+
+# Generate symbols
+dpkg-deb -x libfoo_<version>-<rev>.deb /tmp/libquagga
+dpkg-gensymbols -v1.1.0 -plibquagga0 -P/tmp/libquagga -Odebian/libquagga0.symbols
+
+# set up repository after clone
+git remote add upstream git://git.savannah.nongnu.org/quagga.git
+git branch -u upstream/master upstream
+
+# verify upstream tags
+gpg2 --recv 0x909B071D17A4A64B
+git tag -v quagga-1.1.0
+
+# run tests
+# NOTE: I use a VM; for tests to run, need sudo installed and ssh key access.
+autopkgtest -d ../build-area/quagga_1.1.0-1_amd64.changes -- ssh -H root@192.168.122.119
