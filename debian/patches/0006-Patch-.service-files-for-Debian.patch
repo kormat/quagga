@@ -3,122 +3,107 @@ Date: Sun, 5 Nov 2017 15:11:51 +1100
 Subject: Patch .service files for Debian.
 
 ---
- redhat/bgpd.service   |  6 ++++--
- redhat/isisd.service  |  6 ++++--
- redhat/nhrpd.service  |  6 ++++--
- redhat/ospf6d.service |  6 ++++--
- redhat/ospfd.service  |  6 ++++--
- redhat/pimd.service   | 14 +++++++++-----
- redhat/ripd.service   |  6 ++++--
- redhat/ripngd.service |  6 ++++--
- redhat/zebra.service  | 10 ++++++++--
- 9 files changed, 45 insertions(+), 21 deletions(-)
+ redhat/bgpd.service   |  5 ++---
+ redhat/isisd.service  |  5 ++---
+ redhat/nhrpd.service  |  5 ++---
+ redhat/ospf6d.service |  5 ++---
+ redhat/ospfd.service  |  5 ++---
+ redhat/pimd.service   | 13 +++++++------
+ redhat/ripd.service   |  5 ++---
+ redhat/ripngd.service |  5 ++---
+ redhat/zebra.service  | 10 ++++++----
+ 9 files changed, 27 insertions(+), 31 deletions(-)
 
 diff --git a/redhat/bgpd.service b/redhat/bgpd.service
-index ef24841..f1ddfd9 100644
+index a50bfff..f1ddfd9 100644
 --- a/redhat/bgpd.service
 +++ b/redhat/bgpd.service
-@@ -5,11 +5,13 @@ Wants=network.target
- After=zebra.service network-pre.target
- Before=network.target
- ConditionPathExists=/etc/quagga/bgpd.conf
-+Documentation=man:bgpd
+@@ -9,10 +9,9 @@ Documentation=man:bgpd
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/bgpd.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/bgpd.conf
 -ExecStart=/usr/sbin/bgpd -d $BGPD_OPTS -f /etc/quagga/bgpd.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/bgpd.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/bgpd.conf
 +ExecStart=/usr/sbin/bgpd -d -A 127.0.0.1 -f /etc/quagga/bgpd.conf
  Restart=on-abort
  
  [Install]
 diff --git a/redhat/isisd.service b/redhat/isisd.service
-index edb6eea..a16b2f8 100644
+index 93663aa..a16b2f8 100644
 --- a/redhat/isisd.service
 +++ b/redhat/isisd.service
-@@ -5,11 +5,13 @@ Wants=network.target
- After=zebra.service network-pre.target
- Before=network.target
- ConditionPathExists=/etc/quagga/isisd.conf
-+Documentation=man:isisd
+@@ -9,10 +9,9 @@ Documentation=man:isisd
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/isisd.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/isisd.conf
 -ExecStart=/usr/sbin/isisd -d $ISISD_OPTS -f /etc/quagga/isisd.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/isisd.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/isisd.conf
 +ExecStart=/usr/sbin/isisd -d -A 127.0.0.1 -f /etc/quagga/isisd.conf
  Restart=on-abort
  
  [Install]
 diff --git a/redhat/nhrpd.service b/redhat/nhrpd.service
-index 63f138c..15680e8 100644
+index 5b4120d..15680e8 100644
 --- a/redhat/nhrpd.service
 +++ b/redhat/nhrpd.service
-@@ -5,11 +5,13 @@ Wants=network.target
- After=zebra.service network-pre.target
- Before=network.target
- ConditionPathExists=/etc/quagga/nhrpd.conf
-+Documentation=man:nhrpd
+@@ -9,10 +9,9 @@ Documentation=man:nhrpd
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/nhrpd.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/nhrpd.conf
 -ExecStart=/usr/sbin/nhrpd -d $NHRPD_OPTS -f /etc/quagga/nhrpdd.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/nhrpd.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/nhrpd.conf
 +ExecStart=/usr/sbin/nhrpd -d -A 127.0.0.1 -f /etc/quagga/nhrpd.conf
  Restart=on-abort
  
  [Install]
 diff --git a/redhat/ospf6d.service b/redhat/ospf6d.service
-index b53b970..c883e5c 100644
+index 3c1c978..c883e5c 100644
 --- a/redhat/ospf6d.service
 +++ b/redhat/ospf6d.service
-@@ -5,11 +5,13 @@ Wants=network.target
- After=zebra.service network-pre.target
- Before=network.target
- ConditionPathExists=/etc/quagga/ospf6d.conf
-+Documentation=man:ospf6d
+@@ -9,10 +9,9 @@ Documentation=man:ospf6d
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ospf6d.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/ospf6d.conf
 -ExecStart=/usr/sbin/ospf6d -d $OSPF6D_OPTS -f /etc/quagga/ospf6d.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ospf6d.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/ospf6d.conf
 +ExecStart=/usr/sbin/ospf6d -d -A ::1 -f /etc/quagga/ospf6d.conf
  Restart=on-abort
  
  [Install]
 diff --git a/redhat/ospfd.service b/redhat/ospfd.service
-index 5d6c5bb..57b3bee 100644
+index 0084b6c..57b3bee 100644
 --- a/redhat/ospfd.service
 +++ b/redhat/ospfd.service
-@@ -5,11 +5,13 @@ Wants=network.target
- After=zebra.service network-pre.target
- Before=network.target
- ConditionPathExists=/etc/quagga/ospfd.conf
-+Documentation=man:ospfd
+@@ -9,10 +9,9 @@ Documentation=man:ospfd
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ospfd.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/ospfd.conf
 -ExecStart=/usr/sbin/ospfd -d $OSPFD_OPTS -f /etc/quagga/ospfd.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ospfd.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/ospfd.conf
 +ExecStart=/usr/sbin/ospfd -d -A 127.0.0.1 -f /etc/quagga/ospfd.conf
  Restart=on-abort
  
  [Install]
 diff --git a/redhat/pimd.service b/redhat/pimd.service
-index d62fe64..b2d33f3 100644
+index 1916846..b2d33f3 100644
 --- a/redhat/pimd.service
 +++ b/redhat/pimd.service
-@@ -1,14 +1,18 @@
+@@ -1,17 +1,18 @@
  [Unit]
  Description=PIM multicast routing engine
 -BindTo=zebra.service
@@ -128,13 +113,14 @@ index d62fe64..b2d33f3 100644
 +After=zebra.service network-pre.target
 +Before=network.target
  ConditionPathExists=/etc/quagga/pimd.conf
-+Documentation=man:pimd
+ Documentation=man:pimd
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/pimd.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/pimd.conf
 -ExecStart=/usr/sbin/pimd -d $PIMD_OPTS -f /etc/quagga/pimd.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/pimd.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/pimd.conf
 +ExecStart=/usr/sbin/pimd -d -A 127.0.0.1 -f /etc/quagga/pimd.conf
  Restart=on-abort
@@ -143,61 +129,53 @@ index d62fe64..b2d33f3 100644
 -WantedBy=network.target
 +WantedBy=multi-user.target
 diff --git a/redhat/ripd.service b/redhat/ripd.service
-index ed7f922..d6290e0 100644
+index 103b5a9..d6290e0 100644
 --- a/redhat/ripd.service
 +++ b/redhat/ripd.service
-@@ -5,11 +5,13 @@ Wants=network.target
- After=zebra.service network-pre.target
- Before=network.target
- ConditionPathExists=/etc/quagga/ripd.conf
-+Documentation=man:ripd
+@@ -9,10 +9,9 @@ Documentation=man:ripd
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ripd.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/ripd.conf
 -ExecStart=/usr/sbin/ripd -d $RIPD_OPTS -f /etc/quagga/ripd.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ripd.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/ripd.conf
 +ExecStart=/usr/sbin/ripd -d -A 127.0.0.1 -f /etc/quagga/ripd.conf
  Restart=on-abort
  
  [Install]
 diff --git a/redhat/ripngd.service b/redhat/ripngd.service
-index 2519b31..2e4ccb8 100644
+index 6fe6ba8..2e4ccb8 100644
 --- a/redhat/ripngd.service
 +++ b/redhat/ripngd.service
-@@ -5,11 +5,13 @@ Wants=network.target
- After=zebra.service network-pre.target
- Before=network.target
- ConditionPathExists=/etc/quagga/ripngd.conf
-+Documentation=man:ripngd
+@@ -9,10 +9,9 @@ Documentation=man:ripngd
  
  [Service]
  Type=forking
 -EnvironmentFile=/etc/sysconfig/quagga
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ripngd.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /etc/quagga/ripngd.conf
 -ExecStart=/usr/sbin/ripngd -d $RIPNGD_OPTS -f /etc/quagga/ripngd.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/ripngd.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/ripngd.conf
 +ExecStart=/usr/sbin/ripngd -d -A ::1 -f /etc/quagga/ripngd.conf
  Restart=on-abort
  
  [Install]
 diff --git a/redhat/zebra.service b/redhat/zebra.service
-index f9107f1..39080a0 100644
+index fa5a004..5111677 100644
 --- a/redhat/zebra.service
 +++ b/redhat/zebra.service
-@@ -4,13 +4,19 @@ Wants=network.target
- Before=network.target
- After=network-pre.target
- ConditionPathExists=/etc/quagga/zebra.conf
-+Documentation=man:zebra
+@@ -8,13 +8,15 @@ Documentation=man:zebra
  
  [Service]
  Type=forking
 -EnvironmentFile=-/etc/sysconfig/quagga
  ExecStartPre=/sbin/ip route flush proto zebra
+ ExecStartPre=-/bin/chmod -f 640 /etc/quagga/vtysh.conf /etc/quagga/zebra.conf
+-ExecStartPre=-/bin/chown -f $QUAGGA_USER:$QUAGGA_GROUP /run/quagga /etc/quagga/zebra.conf
+-ExecStartPre=-/bin/chown -f ${QUAGGA_USER}${VTY_GROUP:+":$VTY_GROUP"} quaggavty /etc/quagga/vtysh.conf
 -ExecStart=/usr/sbin/zebra -d $ZEBRA_OPTS -f /etc/quagga/zebra.conf
-+ExecStartPre=-/bin/chmod -f 640 /etc/quagga/vtysh.conf /etc/quagga/zebra.conf
 +ExecStartPre=-/bin/chown -f quagga:quagga /etc/quagga/zebra.conf
 +ExecStartPre=-/bin/chown -f quagga:quaggavty /etc/quagga/vtysh.conf
 +ExecStart=/usr/sbin/zebra -d -A 127.0.0.1 -f /etc/quagga/zebra.conf

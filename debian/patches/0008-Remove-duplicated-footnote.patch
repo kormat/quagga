@@ -7,10 +7,10 @@ Subject: Remove duplicated footnote.
  1 file changed, 1 deletion(-)
 
 diff --git a/doc/bgpd.texi b/doc/bgpd.texi
-index d5aa30c..2452eec 100644
+index 3cd442d..3a0f310 100644
 --- a/doc/bgpd.texi
 +++ b/doc/bgpd.texi
-@@ -1722,7 +1722,6 @@ Dump all BGP packet and events to @var{path} file.
+@@ -1724,7 +1724,6 @@ Dump all BGP packet and events to @var{path} file.
  If @var{interval} is set, a new file will be created for echo @var{interval} of seconds.
  The path @var{path} can be set with date and time formatting (strftime).
  The type ‘all-et’ enables support for Extended Timestamp Header (@pxref{Packet Binary Dump Format}).
