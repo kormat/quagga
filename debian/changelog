@@ -1,3 +1,9 @@
+quagga (1.2.4-1) unstable; urgency=medium
+
+  * New upstream release - fix to nht for ipv6
+
+ -- Brett Parker <brettp@mythic-beasts.com>  Sat, 17 Mar 2018 15:33:00 +0000
+
 quagga (1.2.2-1) unstable; urgency=medium
 
   * New upstream release (Closes: #879474, #857187).
