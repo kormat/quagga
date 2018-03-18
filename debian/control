@@ -1,7 +1,7 @@
 Source: quagga
 Section: net
 Priority: optional
-Maintainer: Scott Leggett <scott@sl.id.au>
+Maintainer: Brett Parker <iDunno@sommitrealweird.co.uk>
 Build-Depends:
  chrpath,
  debhelper (>= 10.0.0),
