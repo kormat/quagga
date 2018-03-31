@@ -24,8 +24,8 @@ Build-Depends:
  texlive-generic-recommended,
  texlive-latex-base
 Standards-Version: 4.1.1
-Vcs-git: https://gitlab.com/smlx/quagga.git
-Vcs-browser: https://gitlab.com/smlx/quagga
+Vcs-git: https://salsa.debian.org/debian/quagga.git
+Vcs-browser: https://salsa.debian.org/debian/quagga
 Homepage: http://www.quagga.net/
 
 Package: quagga
