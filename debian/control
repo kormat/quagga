@@ -5,6 +5,7 @@ Maintainer: Brett Parker <iDunno@sommitrealweird.co.uk>
 Build-Depends:
  chrpath,
  debhelper (>= 10.0.0),
+ dh-exec,
  gawk,
  ghostscript,
  groff,

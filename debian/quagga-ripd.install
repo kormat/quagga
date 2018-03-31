@@ -1,2 +1,4 @@
+#! /usr/bin/dh-exec
 redhat/ripd.service /lib/systemd/system/
+redhat/ripd.init => /etc/init.d/ripd
 usr/sbin/ripd

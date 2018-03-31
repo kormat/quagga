@@ -1,2 +1,4 @@
+#! /usr/bin/dh-exec
 redhat/bgpd.service /lib/systemd/system/
+redhat/bgpd.init => /etc/init.d/bgpd
 usr/sbin/bgpd

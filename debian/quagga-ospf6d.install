@@ -1,2 +1,4 @@
+#! /usr/bin/dh-exec
 redhat/ospf6d.service /lib/systemd/system/
+redhat/ospf6d.init => /etc/init.d/ospf6d
 usr/sbin/ospf6d

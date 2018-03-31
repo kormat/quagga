@@ -1,2 +1,4 @@
+#! /usr/bin/dh-exec
 redhat/ripngd.service /lib/systemd/system/
+redhat/ripngd.init => /etc/init.d/ripngd
 usr/sbin/ripngd

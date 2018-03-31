@@ -1,0 +1,446 @@
+From: Brett Parker <iDunno@sommitrealweird.co.uk>
+Date: Sat, 31 Mar 2018 14:21:41 +0100
+Subject: Patch init scripts for Debian
+
+---
+ redhat/bgpd.init        | 19 +++++++++----------
+ redhat/isisd.init       | 19 +++++++++----------
+ redhat/ospf6d.init      | 19 +++++++++----------
+ redhat/ospfd.init       | 19 +++++++++----------
+ redhat/pimd.init        | 19 +++++++++----------
+ redhat/quagga.sysconfig |  4 ++--
+ redhat/ripd.init        | 19 +++++++++----------
+ redhat/ripngd.init      | 19 +++++++++----------
+ redhat/watchquagga.init | 16 +++++++---------
+ redhat/zebra.init       | 19 +++++++++----------
+ 10 files changed, 81 insertions(+), 91 deletions(-)
+
+diff --git a/redhat/bgpd.init b/redhat/bgpd.init
+index e18511a..0cd69e2 100644
+--- a/redhat/bgpd.init
++++ b/redhat/bgpd.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: bgpd
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: BGP routing engine
+ # Description: BGP routing engine for use with Zebra
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="bgpd"
+@@ -23,13 +24,11 @@ cmd=bgpd
+ LOCK_FILE=/var/lock/subsys/bgpd
+ CONF_FILE=/etc/quagga/bgpd.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4
+diff --git a/redhat/isisd.init b/redhat/isisd.init
+index 9e80530..3dcde40 100644
+--- a/redhat/isisd.init
++++ b/redhat/isisd.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: isisd
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: IS-IS routing engine
+ # Description: IS-IS routing engine for use with Zebra
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="isisd"
+@@ -23,13 +24,11 @@ cmd=isisd
+ LOCK_FILE=/var/lock/subsys/isisd
+ CONF_FILE=/etc/quagga/isisd.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4
+diff --git a/redhat/ospf6d.init b/redhat/ospf6d.init
+index 4133b4a..4cc6c90 100644
+--- a/redhat/ospf6d.init
++++ b/redhat/ospf6d.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: ospf6d
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: OSPF routing engine for IPv6
+ # Description: OSPF routing engine for use with Zebra and IPv6
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="ospf6d"
+@@ -23,13 +24,11 @@ cmd=ospf6d
+ LOCK_FILE=/var/lock/subsys/ospf6d
+ CONF_FILE=/etc/quagga/ospf6d.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4
+diff --git a/redhat/ospfd.init b/redhat/ospfd.init
+index d964f38..bd243f6 100644
+--- a/redhat/ospfd.init
++++ b/redhat/ospfd.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: ospfd
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: OSPF routing engine
+ # Description: OSPF routing engine for use with Zebra
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="ospfd"
+@@ -23,13 +24,11 @@ cmd=ospfd
+ LOCK_FILE=/var/lock/subsys/ospfd
+ CONF_FILE=/etc/quagga/ospfd.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4
+diff --git a/redhat/pimd.init b/redhat/pimd.init
+index 49f9075..2517d33 100644
+--- a/redhat/pimd.init
++++ b/redhat/pimd.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: pimd
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: PIM multicast routing engine
+ # Description: PIM routing engine for use with Zebra
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="pimd"
+@@ -23,13 +24,11 @@ cmd=pimd
+ LOCK_FILE=/var/lock/subsys/pimd
+ CONF_FILE=/etc/quagga/pimd.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4
+diff --git a/redhat/quagga.sysconfig b/redhat/quagga.sysconfig
+index 8353b13..de4a099 100644
+--- a/redhat/quagga.sysconfig
++++ b/redhat/quagga.sysconfig
+@@ -15,7 +15,7 @@ PIMD_OPTS="-A 127.0.0.1"
+ # system startup to chmod config files.
+ QUAGGA_USER=quagga
+ QUAGGA_GROUP=quagga
+-VTY_GROUP=
++VTY_GROUP=quaggavty
+ 
+ # Watchquagga configuration for LSB initscripts
+ #
+@@ -28,4 +28,4 @@ VTY_GROUP=
+ #WATCH_DAEMONS="zebra bgpd ospfd ospf6d ripd ripngd"
+ #
+ # Timer values can be adjusting by editing this line:
+-WATCH_OPTS="-Az -b_ -r/sbin/service_%s_restart -s/sbin/service_%s_start -k/sbin/service_%s_stop"
++WATCH_OPTS="-Az -b_ -r '/usr/sbin/invoke-rc.d %s restart' -s '/usr/sbin/invoke-rc.d %s start' -k '/usr/sbin/invoke-rc.d %s stop'"
+diff --git a/redhat/ripd.init b/redhat/ripd.init
+index 9b412cb..f5dbc58 100644
+--- a/redhat/ripd.init
++++ b/redhat/ripd.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: ripd
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: RIP routing engine
+ # Description: RIP routing engine for use with Zebra
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="ripd"
+@@ -23,13 +24,11 @@ cmd=ripd
+ LOCK_FILE=/var/lock/subsys/ripd
+ CONF_FILE=/etc/quagga/ripd.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4
+diff --git a/redhat/ripngd.init b/redhat/ripngd.init
+index 88f346f..d51e6b7 100644
+--- a/redhat/ripngd.init
++++ b/redhat/ripngd.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: ripngd
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: RIP routing engine for IPv6
+ # Description: RIP routing engine for use with Zebra and IPv6
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="ripngd"
+@@ -23,13 +24,11 @@ cmd=ripngd
+ LOCK_FILE=/var/lock/subsys/ripngd
+ CONF_FILE=/etc/quagga/ripngd.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4
+diff --git a/redhat/watchquagga.init b/redhat/watchquagga.init
+index dda3506..b583517 100644
+--- a/redhat/watchquagga.init
++++ b/redhat/watchquagga.init
+@@ -3,18 +3,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: watchquagga
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: Quagga watchdog
+ # Description: Quagga watchdog for use with Zebra
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="watchquagga"
+@@ -23,11 +24,8 @@ LOCK_FILE=/var/lock/subsys/watchquagga
+ 
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+ 	# Check that there are daemons to be monitored.
+-	[ -z "$WATCH_DAEMONS" ] && exit 1
++	[ -z "$WATCH_DAEMONS" ] && exit 0
+ 
+ 	echo -n $"Starting $PROG: "
+ 	daemon $cmd -d $WATCH_OPTS $WATCH_DAEMONS
+diff --git a/redhat/zebra.init b/redhat/zebra.init
+index 4242b16..5cc5b1c 100644
+--- a/redhat/zebra.init
++++ b/redhat/zebra.init
+@@ -4,18 +4,19 @@
+ 
+ ### BEGIN INIT INFO
+ # Provides: zebra
++# Required-Start:    $remote_fs $syslog $network
++# Required-Stop:     $remote_fs $syslog $network
++# Default-Start:     2 3 4 5
++# Default-Stop:      0 1 6
+ # Short-Description: GNU Zebra routing manager
+ # Description: GNU Zebra routing manager
+ ### END INIT INFO
+ 
+ # source function library
+-. /etc/rc.d/init.d/functions
+-
+-# Get network config
+-. /etc/sysconfig/network
++. /lib/lsb/init-functions
+ 
+ # quagga command line options
+-. /etc/sysconfig/quagga
++. /etc/default/quagga
+ 
+ RETVAL=0
+ PROG="zebra"
+@@ -23,13 +24,11 @@ cmd=zebra
+ LOCK_FILE=/var/lock/subsys/zebra
+ CONF_FILE=/etc/quagga/zebra.conf
+ 
++# if the config file doesn't exist, exit immediately
++[ -f "$CONF_FILE" ] || exit 0
++
+ case "$1" in
+   start)
+-	# Check that networking is up.
+-	[ "${NETWORKING}" = "no" ] && exit 1
+-
+-	# The process must be configured first.
+-	[ -f $CONF_FILE ] || exit 6
+ 	if [ `id -u` -ne 0 ]; then
+ 		echo $"Insufficient privilege" 1>&2
+ 		exit 4

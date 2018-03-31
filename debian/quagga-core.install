@@ -1,5 +1,8 @@
+#! /usr/bin/dh-exec
 debian/etc/pam.d/quagga /etc/pam.d/
 redhat/zebra.service /lib/systemd/system/
+redhat/zebra.init => /etc/init.d/zebra
+redhat/quagga.sysconfig => /etc/default/quagga
 usr/bin/vtysh
 usr/lib/*/*.so.*
 usr/sbin/zebra

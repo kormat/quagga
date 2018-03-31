@@ -1,3 +1,5 @@
+#! /usr/bin/dh-exec
 redhat/ospfd.service /lib/systemd/system/
+redhat/ospfd.init => /etc/init.d/ospfd
 usr/sbin/ospfclient
 usr/sbin/ospfd

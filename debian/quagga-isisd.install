@@ -1,2 +1,4 @@
+#! /usr/bin/dh-exec
 redhat/isisd.service /lib/systemd/system/
+redhat/isisd.init => /etc/init.d/isisd
 usr/sbin/isisd

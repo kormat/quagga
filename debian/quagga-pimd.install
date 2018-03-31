@@ -1,2 +1,4 @@
+#! /usr/bin/dh-exec
 redhat/pimd.service /lib/systemd/system/
+redhat/pimd.init => /etc/init.d/pimd
 usr/sbin/pimd

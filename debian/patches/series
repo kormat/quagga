@@ -3,3 +3,4 @@
 0007-Add-correct-QUAGGA_VERSION-to-manpages.patch
 0008-Remove-duplicated-footnote.patch
 0009-Fix-typo-in-dump-bgp-help-text.patch
+0010-Patch-init-scripts-for-Debian.patch
