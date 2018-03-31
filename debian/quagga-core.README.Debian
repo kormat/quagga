@@ -20,26 +20,44 @@ available forcing you to explicitly type "apt-get install quagga" to upgrade it.
 * Daemon Selection and Control:
 ===============================
 
-Each routing daemon can be brought up or down independently. E.g.
+SystemD
+~~~~~~~
 
-    # systemctl start bgpd
+  Each routing daemon can be brought up or down independently. E.g.
 
-This will also automatically start the `zebra` service, which is a dependency
-of all the quagga routing daemons. Restart an individual daemon in the usual
-way:
+      # systemctl start bgpd
 
-    # systemctl restart bgpd
+  This will also automatically start the `zebra` service, which is a dependency
+  of all the quagga routing daemons. Restart an individual daemon in the usual
+  way:
 
-And restart or stop all daemons by targeting the `zebra` dependency:
+      # systemctl restart bgpd
 
-    # systemctl restart zebra
-    # systemctl stop zebra
+  And restart or stop all daemons by targeting the `zebra` dependency:
 
-IMPORTANT NOTE: Before starting (and so, by extension, on restart), the `zebra`
-service will flush all existing zebra/quagga routes from the kernel routing
-table. To override this behaviour, copy /lib/systemd/system/zebra.service to
-/etc/systemd/system/zebra.service, and remove the "flush" line.
+      # systemctl restart zebra
+      # systemctl stop zebra
 
+  IMPORTANT NOTE: Before starting (and so, by extension, on restart), the `zebra`
+  service will flush all existing zebra/quagga routes from the kernel routing
+  table. To override this behaviour, copy /lib/systemd/system/zebra.service to
+  /etc/systemd/system/zebra.service, and remove the "flush" line.
+
+SysV Init
+~~~~~~~~~
+
+  The packaged initscripts will not start the daemons unless the relevant .conf
+  file exists, e.g. for bgpd /etc/quagga/bgpd.conf. This matches how the
+  systemd unit files work.
+
+  Also, on package install/upgrade the daemons are not automatically started or
+  restarted. This means that you can upgrade the software without it restarting
+  and dropping all your routes, leaving it so that you can restart the daemons
+  when you're ready.
+
+  The watchquagga init script relies on the WATCH_DAEMONS setting in
+  /etc/default/quagga, if you want to use watchquagga then set that to the list
+  of daemons to watch.
 
 * What is quagga?
 =================

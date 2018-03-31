@@ -1,11 +1,19 @@
+quagga (1.2.4-2) unstable; urgency=low
+
+  * Correct previous changelog entry for CVE numbers
+  * Re-enable building of watchquagga
+  * Re-instate sysvinit scripts (Closes: #849011, #865874)
+
+ -- Brett Parker <iDunno@sommitrealweird.co.uk>  Sat, 31 Mar 2018 14:36:08 +0100
+
 quagga (1.2.4-1) unstable; urgency=medium
 
   * New maintainer (Closes: #884919)
   * New upstream release (Closes: #890563)
-    - Fixes CVE-2018-5278
-    - Fixes CVE-2018-5279
-    - Fixes CVE-2018-5280
-    - Fixes CVE-2018-5281
+    - Fixes CVE-2018-5378
+    - Fixes CVE-2018-5379
+    - Fixes CVE-2018-5380
+    - Fixes CVE-2018-5381
 
  -- Brett Parker <iDunno@sommitrealweird.co.uk>  Sat, 17 Mar 2018 15:33:00 +0000
 

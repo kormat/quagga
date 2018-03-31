@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eu
+
+case "$1" in
+
+remove)
+    # remove watchquagga masking for systemd
+    if [ "$(readlink -f /lib/systemd/system/watchquagga.service)" == "/dev/null" ]; then
+        rm /lib/systemd/system/watchquagga.service
+    fi
+    ;;
+esac
+
+#DEBHELPER#

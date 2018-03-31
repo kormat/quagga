@@ -16,7 +16,6 @@ Build-Depends:
  libpam0g-dev | libpam-dev,
  libpcre3-dev,
  libreadline-dev,
- libsnmp-dev,
  moreutils,
  pkg-config,
  po-debconf,

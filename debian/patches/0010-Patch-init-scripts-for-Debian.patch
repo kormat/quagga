@@ -3,28 +3,28 @@ Date: Sat, 31 Mar 2018 14:21:41 +0100
 Subject: Patch init scripts for Debian
 
 ---
- redhat/bgpd.init        | 19 +++++++++----------
- redhat/isisd.init       | 19 +++++++++----------
- redhat/ospf6d.init      | 19 +++++++++----------
- redhat/ospfd.init       | 19 +++++++++----------
- redhat/pimd.init        | 19 +++++++++----------
+ redhat/bgpd.init        | 40 +++++++++++++++++++++-------------------
+ redhat/isisd.init       | 40 +++++++++++++++++++++-------------------
+ redhat/ospf6d.init      | 40 +++++++++++++++++++++-------------------
+ redhat/ospfd.init       | 40 +++++++++++++++++++++-------------------
+ redhat/pimd.init        | 40 +++++++++++++++++++++-------------------
  redhat/quagga.sysconfig |  4 ++--
- redhat/ripd.init        | 19 +++++++++----------
- redhat/ripngd.init      | 19 +++++++++----------
- redhat/watchquagga.init | 16 +++++++---------
- redhat/zebra.init       | 19 +++++++++----------
- 10 files changed, 81 insertions(+), 91 deletions(-)
+ redhat/ripd.init        | 40 +++++++++++++++++++++-------------------
+ redhat/ripngd.init      | 40 +++++++++++++++++++++-------------------
+ redhat/watchquagga.init | 37 +++++++++++++++++++------------------
+ redhat/zebra.init       | 40 +++++++++++++++++++++-------------------
+ 10 files changed, 189 insertions(+), 172 deletions(-)
 
 diff --git a/redhat/bgpd.init b/redhat/bgpd.init
-index e18511a..0cd69e2 100644
+index e18511a..d55333d 100644
 --- a/redhat/bgpd.init
 +++ b/redhat/bgpd.init
-@@ -4,18 +4,19 @@
+@@ -4,49 +4,51 @@
  
  ### BEGIN INIT INFO
  # Provides: bgpd
-+# Required-Start:    $remote_fs $syslog $network
-+# Required-Stop:     $remote_fs $syslog $network
++# Required-Start:    $remote_fs $syslog $network zebra
++# Required-Stop:     $remote_fs $syslog $network zebra
 +# Default-Start:     2 3 4 5
 +# Default-Stop:      0 1 6
  # Short-Description: BGP routing engine
@@ -44,10 +44,15 @@ index e18511a..0cd69e2 100644
  
  RETVAL=0
  PROG="bgpd"
-@@ -23,13 +24,11 @@ cmd=bgpd
- LOCK_FILE=/var/lock/subsys/bgpd
+-cmd=bgpd
+-LOCK_FILE=/var/lock/subsys/bgpd
++cmd=/usr/sbin/bgpd
++LOCK_FILE=/var/lock/quagga/bgpd
  CONF_FILE=/etc/quagga/bgpd.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -61,16 +66,48 @@ index e18511a..0cd69e2 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $BGPD_OPTS -f $CONF_FILE
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon -- $cmd -d $BGPD_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -61,7 +63,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/isisd.init b/redhat/isisd.init
-index 9e80530..3dcde40 100644
+index 9e80530..e5b6160 100644
 --- a/redhat/isisd.init
 +++ b/redhat/isisd.init
-@@ -4,18 +4,19 @@
+@@ -4,49 +4,51 @@
  
  ### BEGIN INIT INFO
  # Provides: isisd
-+# Required-Start:    $remote_fs $syslog $network
-+# Required-Stop:     $remote_fs $syslog $network
++# Required-Start:    $remote_fs $syslog $network zebra
++# Required-Stop:     $remote_fs $syslog $network zebra
 +# Default-Start:     2 3 4 5
 +# Default-Stop:      0 1 6
  # Short-Description: IS-IS routing engine
@@ -90,10 +127,15 @@ index 9e80530..3dcde40 100644
  
  RETVAL=0
  PROG="isisd"
-@@ -23,13 +24,11 @@ cmd=isisd
- LOCK_FILE=/var/lock/subsys/isisd
+-cmd=isisd
+-LOCK_FILE=/var/lock/subsys/isisd
++cmd=/usr/sbin/isisd
++LOCK_FILE=/var/lock/quagga/isisd
  CONF_FILE=/etc/quagga/isisd.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -107,16 +149,48 @@ index 9e80530..3dcde40 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $ISISD_OPTS -f $CONF_FILE
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon -- $cmd -d $ISISD_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -61,7 +63,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/ospf6d.init b/redhat/ospf6d.init
-index 4133b4a..4cc6c90 100644
+index 4133b4a..a44d4a8 100644
 --- a/redhat/ospf6d.init
 +++ b/redhat/ospf6d.init
-@@ -4,18 +4,19 @@
+@@ -4,49 +4,51 @@
  
  ### BEGIN INIT INFO
  # Provides: ospf6d
-+# Required-Start:    $remote_fs $syslog $network
-+# Required-Stop:     $remote_fs $syslog $network
++# Required-Start:    $remote_fs $syslog $network zebra
++# Required-Stop:     $remote_fs $syslog $network zebra
 +# Default-Start:     2 3 4 5
 +# Default-Stop:      0 1 6
  # Short-Description: OSPF routing engine for IPv6
@@ -136,10 +210,15 @@ index 4133b4a..4cc6c90 100644
  
  RETVAL=0
  PROG="ospf6d"
-@@ -23,13 +24,11 @@ cmd=ospf6d
- LOCK_FILE=/var/lock/subsys/ospf6d
+-cmd=ospf6d
+-LOCK_FILE=/var/lock/subsys/ospf6d
++cmd=/usr/sbin/ospf6d
++LOCK_FILE=/var/lock/quagga/ospf6d
  CONF_FILE=/etc/quagga/ospf6d.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -153,16 +232,48 @@ index 4133b4a..4cc6c90 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $OSPF6D_OPTS -f $CONF_FILE
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon -- $cmd -d $OSPF6D_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -61,7 +63,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/ospfd.init b/redhat/ospfd.init
-index d964f38..bd243f6 100644
+index d964f38..ce88838 100644
 --- a/redhat/ospfd.init
 +++ b/redhat/ospfd.init
-@@ -4,18 +4,19 @@
+@@ -4,49 +4,51 @@
  
  ### BEGIN INIT INFO
  # Provides: ospfd
-+# Required-Start:    $remote_fs $syslog $network
-+# Required-Stop:     $remote_fs $syslog $network
++# Required-Start:    $remote_fs $syslog $network zebra
++# Required-Stop:     $remote_fs $syslog $network zebra
 +# Default-Start:     2 3 4 5
 +# Default-Stop:      0 1 6
  # Short-Description: OSPF routing engine
@@ -182,10 +293,15 @@ index d964f38..bd243f6 100644
  
  RETVAL=0
  PROG="ospfd"
-@@ -23,13 +24,11 @@ cmd=ospfd
- LOCK_FILE=/var/lock/subsys/ospfd
+-cmd=ospfd
+-LOCK_FILE=/var/lock/subsys/ospfd
++cmd=/usr/sbin/ospfd
++LOCK_FILE=/var/lock/quagga/ospfd
  CONF_FILE=/etc/quagga/ospfd.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -199,16 +315,48 @@ index d964f38..bd243f6 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $OSPFD_OPTS -f $CONF_FILE
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon $cmd -d $OSPFD_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -61,7 +63,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/pimd.init b/redhat/pimd.init
-index 49f9075..2517d33 100644
+index 49f9075..5ea5c3c 100644
 --- a/redhat/pimd.init
 +++ b/redhat/pimd.init
-@@ -4,18 +4,19 @@
+@@ -4,49 +4,51 @@
  
  ### BEGIN INIT INFO
  # Provides: pimd
-+# Required-Start:    $remote_fs $syslog $network
-+# Required-Stop:     $remote_fs $syslog $network
++# Required-Start:    $remote_fs $syslog $network zebra
++# Required-Stop:     $remote_fs $syslog $network zebra
 +# Default-Start:     2 3 4 5
 +# Default-Stop:      0 1 6
  # Short-Description: PIM multicast routing engine
@@ -228,10 +376,15 @@ index 49f9075..2517d33 100644
  
  RETVAL=0
  PROG="pimd"
-@@ -23,13 +24,11 @@ cmd=pimd
- LOCK_FILE=/var/lock/subsys/pimd
+-cmd=pimd
+-LOCK_FILE=/var/lock/subsys/pimd
++cmd=/usr/sbin/pimd
++LOCK_FILE=/var/lock/quagga/pimd
  CONF_FILE=/etc/quagga/pimd.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -245,6 +398,38 @@ index 49f9075..2517d33 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $PIMD_OPTS -f $CONF_FILE
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon -- $cmd -d $PIMD_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -61,7 +63,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/quagga.sysconfig b/redhat/quagga.sysconfig
 index 8353b13..de4a099 100644
 --- a/redhat/quagga.sysconfig
@@ -265,15 +450,15 @@ index 8353b13..de4a099 100644
 -WATCH_OPTS="-Az -b_ -r/sbin/service_%s_restart -s/sbin/service_%s_start -k/sbin/service_%s_stop"
 +WATCH_OPTS="-Az -b_ -r '/usr/sbin/invoke-rc.d %s restart' -s '/usr/sbin/invoke-rc.d %s start' -k '/usr/sbin/invoke-rc.d %s stop'"
 diff --git a/redhat/ripd.init b/redhat/ripd.init
-index 9b412cb..f5dbc58 100644
+index 9b412cb..b83e669 100644
 --- a/redhat/ripd.init
 +++ b/redhat/ripd.init
-@@ -4,18 +4,19 @@
+@@ -4,49 +4,51 @@
  
  ### BEGIN INIT INFO
  # Provides: ripd
-+# Required-Start:    $remote_fs $syslog $network
-+# Required-Stop:     $remote_fs $syslog $network
++# Required-Start:    $remote_fs $syslog $network zebra
++# Required-Stop:     $remote_fs $syslog $network zebra
 +# Default-Start:     2 3 4 5
 +# Default-Stop:      0 1 6
  # Short-Description: RIP routing engine
@@ -293,10 +478,15 @@ index 9b412cb..f5dbc58 100644
  
  RETVAL=0
  PROG="ripd"
-@@ -23,13 +24,11 @@ cmd=ripd
- LOCK_FILE=/var/lock/subsys/ripd
+-cmd=ripd
+-LOCK_FILE=/var/lock/subsys/ripd
++cmd=/usr/sbin/ripd
++LOCK_FILE=/var/lock/quagga/ripd
  CONF_FILE=/etc/quagga/ripd.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -310,16 +500,48 @@ index 9b412cb..f5dbc58 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $RIPD_OPTS -f $CONF_FILE
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon $cmd -d $RIPD_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -61,7 +63,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/ripngd.init b/redhat/ripngd.init
-index 88f346f..d51e6b7 100644
+index 88f346f..1341b75 100644
 --- a/redhat/ripngd.init
 +++ b/redhat/ripngd.init
-@@ -4,18 +4,19 @@
+@@ -4,49 +4,51 @@
  
  ### BEGIN INIT INFO
  # Provides: ripngd
-+# Required-Start:    $remote_fs $syslog $network
-+# Required-Stop:     $remote_fs $syslog $network
++# Required-Start:    $remote_fs $syslog $network zebra
++# Required-Stop:     $remote_fs $syslog $network zebra
 +# Default-Start:     2 3 4 5
 +# Default-Stop:      0 1 6
  # Short-Description: RIP routing engine for IPv6
@@ -339,10 +561,15 @@ index 88f346f..d51e6b7 100644
  
  RETVAL=0
  PROG="ripngd"
-@@ -23,13 +24,11 @@ cmd=ripngd
- LOCK_FILE=/var/lock/subsys/ripngd
+-cmd=ripngd
+-LOCK_FILE=/var/lock/subsys/ripngd
++cmd=/usr/sbin/ripngd
++LOCK_FILE=/var/lock/quagga/ripngd
  CONF_FILE=/etc/quagga/ripngd.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -356,11 +583,43 @@ index 88f346f..d51e6b7 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $RIPNGD_OPTS -f $CONF_FILE
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon $cmd -d $RIPNGD_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -61,7 +63,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/watchquagga.init b/redhat/watchquagga.init
-index dda3506..b583517 100644
+index dda3506..bed9c78 100644
 --- a/redhat/watchquagga.init
 +++ b/redhat/watchquagga.init
-@@ -3,18 +3,19 @@
+@@ -3,44 +3,45 @@
  
  ### BEGIN INIT INFO
  # Provides: watchquagga
@@ -385,7 +644,13 @@ index dda3506..b583517 100644
  
  RETVAL=0
  PROG="watchquagga"
-@@ -23,11 +24,8 @@ LOCK_FILE=/var/lock/subsys/watchquagga
+-cmd=watchquagga
+-LOCK_FILE=/var/lock/subsys/watchquagga
++cmd=/usr/sbin/watchquagga
++LOCK_FILE=/var/lock/quagga/watchquagga
++
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
  
  case "$1" in
    start)
@@ -396,13 +661,41 @@ index dda3506..b583517 100644
 -	[ -z "$WATCH_DAEMONS" ] && exit 1
 +	[ -z "$WATCH_DAEMONS" ] && exit 0
  
- 	echo -n $"Starting $PROG: "
- 	daemon $cmd -d $WATCH_OPTS $WATCH_DAEMONS
+-	echo -n $"Starting $PROG: "
+-	daemon $cmd -d $WATCH_OPTS $WATCH_DAEMONS
++	log_daemon_msg "Starting $PROG" "$PROG"
++	start_daemon $cmd -d $WATCH_OPTS $WATCH_DAEMONS
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -55,7 +56,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)
 diff --git a/redhat/zebra.init b/redhat/zebra.init
-index 4242b16..5cc5b1c 100644
+index 4242b16..55450c6 100644
 --- a/redhat/zebra.init
 +++ b/redhat/zebra.init
-@@ -4,18 +4,19 @@
+@@ -4,50 +4,52 @@
  
  ### BEGIN INIT INFO
  # Provides: zebra
@@ -427,10 +720,15 @@ index 4242b16..5cc5b1c 100644
  
  RETVAL=0
  PROG="zebra"
-@@ -23,13 +24,11 @@ cmd=zebra
- LOCK_FILE=/var/lock/subsys/zebra
+-cmd=zebra
+-LOCK_FILE=/var/lock/subsys/zebra
++cmd=/usr/sbin/zebra
++LOCK_FILE=/var/lock/quagga/zebra
  CONF_FILE=/etc/quagga/zebra.conf
  
++[ -d /var/lock/quagga ] || mkdir /var/lock/quagga
++[ -d /run/quagga ] || ( mkdir /run/quagga && chown quagga:quagga /run/quagga )
++
 +# if the config file doesn't exist, exit immediately
 +[ -f "$CONF_FILE" ] || exit 0
 +
@@ -444,3 +742,36 @@ index 4242b16..5cc5b1c 100644
  	if [ `id -u` -ne 0 ]; then
  		echo $"Insufficient privilege" 1>&2
  		exit 4
+ 	fi
+ 
+-	echo -n $"Starting $PROG: "
++	log_daemon_msg "Starting $PROG" "$PROG"
+ 	/sbin/ip route flush proto zebra
+-	daemon $cmd -d $ZEBRA_OPTS -f $CONF_FILE
++	start_daemon $cmd -d $ZEBRA_OPTS -f $CONF_FILE
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && touch $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   stop)
+-	echo -n $"Shutting down $PROG: "
+-	killproc $cmd
++	log_daemon_msg "Shutting down $PROG" "$PROG"
++	killproc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	[ $RETVAL -eq 0 ] && rm -f $LOCK_FILE
+-	echo
++	log_end_msg $RETVAL
+ 	;;
+   restart|reload|force-reload)
+ 	$0 stop
+@@ -62,7 +64,7 @@ case "$1" in
+ 	RETVAL=$?
+ 	;;
+   status)
+-	status $cmd
++	status_of_proc -p /run/quagga/$PROG.pid $cmd
+ 	RETVAL=$?
+ 	;;
+   *)

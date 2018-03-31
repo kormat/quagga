@@ -19,4 +19,9 @@ adduser \
 # add quagga user to the quaggavty group
 adduser quagga quaggavty
 
+# mask out watchquagga on systemd
+if [ ! -e /lib/systemd/system/watchquagga.service ]; then
+    ln -s /dev/null /lib/systemd/system/watchquagga.service
+fi
+
 #DEBHELPER#

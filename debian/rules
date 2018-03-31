@@ -14,7 +14,6 @@ export DH_ALWAYS_EXCLUDE = .gitignore
 	dh $@ --parallel --list-missing
 
 override_dh_auto_configure:
-	# disable snmp due to openssl licensing issues
 	dh_auto_configure -- \
 		--enable-exampledir=/usr/share/doc/quagga/examples/ \
 		--localstatedir=/run/quagga \
@@ -41,6 +40,16 @@ override_dh_auto_install:
 
 override_dh_strip:
 	dh_strip --dbgsym-migration='quagga-dbg (<< 1.1.0-1~)'
+
+override_dh_installinit:
+	dh_installinit --only-scripts -r --no-start -p quagga-core --name watchquagga
+	dh_installinit --only-scripts -r --no-start -p quagga-core --name zebra
+	dh_installinit --only-scripts -r --no-start -p quagga-bgpd --name bgpd
+	dh_installinit --only-scripts -r --no-start -p quagga-isisd --name isisd
+	dh_installinit --only-scripts -r --no-start -p quagga-ospf6d --name ospf6d
+	dh_installinit --only-scripts -r --no-start -p quagga-pimd --name pimd
+	dh_installinit --only-scripts -r --no-start -p quagga-ripd --name ripd
+	dh_installinit --only-scripts -r --no-start -p quagga-ripngd --name ripngd
 
 # avoid lintian warning package-has-unnecessary-activation-of-ldconfig-trigger
 override_dh_makeshlibs:
