@@ -15,12 +15,10 @@ export DH_ALWAYS_EXCLUDE = .gitignore
 
 override_dh_auto_configure:
 	# disable snmp due to openssl licensing issues
-	# disable watchquagga since we rely on systemd
 	dh_auto_configure -- \
 		--enable-exampledir=/usr/share/doc/quagga/examples/ \
 		--localstatedir=/run/quagga \
 		--sysconfdir=/etc/quagga \
-		--disable-watchquagga \
 		--with-libpam \
 		--enable-user=quagga \
 		--enable-group=quagga \
