@@ -1,0 +1,82 @@
+--- a/lib/route_types.txt
++++ b/lib/route_types.txt
+@@ -61,6 +61,7 @@
+ ZEBRA_ROUTE_OLSR,       olsr,      olsrd,  'o', 0, 0, "OLSR"
+ ZEBRA_ROUTE_BABEL,      babel,     babeld, 'A', 1, 1, "Babel"
+ ZEBRA_ROUTE_NHRP,       nhrp,      nhrpd,  'N', 1, 1, "NHRP"
++ZEBRA_ROUTE_SIG,        sig,       NULL,   's', 1, 1, "SCION IP-Gateway"
+ 
+ ## help strings
+ ZEBRA_ROUTE_SYSTEM, "Reserved route type, for internal use only"
+@@ -78,3 +79,4 @@
+ ZEBRA_ROUTE_OLSR,   "Optimised Link State Routing (OLSR)"
+ ZEBRA_ROUTE_BABEL,  "Babel routing protocol (Babel)"
+ ZEBRA_ROUTE_NHRP,   "Next Hop Resolution Protocol (NHRP)"
++ZEBRA_ROUTE_SIG,    "SCION IP-Gateway exported route"
+--- a/zebra/zebra_rib.c
++++ b/zebra/zebra_rib.c
+@@ -73,6 +73,7 @@
+   [ZEBRA_ROUTE_BGP]     = {ZEBRA_ROUTE_BGP,      20  /* IBGP is 200. */},
+   [ZEBRA_ROUTE_BABEL]   = {ZEBRA_ROUTE_BABEL,    95},
+   [ZEBRA_ROUTE_NHRP]    = {ZEBRA_ROUTE_NHRP,     10},
++  [ZEBRA_ROUTE_SIG]     = {ZEBRA_ROUTE_SIG,       2},
+   /* no entry/default: 150 */
+ };
+ 
+@@ -874,7 +875,9 @@
+ }
+ 
+ #define RIB_SYSTEM_ROUTE(R) \
+-        ((R)->type == ZEBRA_ROUTE_KERNEL || (R)->type == ZEBRA_ROUTE_CONNECT)
++        ((R)->type == ZEBRA_ROUTE_KERNEL || \
++         (R)->type == ZEBRA_ROUTE_CONNECT || \
++         (R)->type == ZEBRA_ROUTE_SIG)
+ 
+ /* This function verifies reachability of one given nexthop, which can be
+  * numbered or unnumbered, IPv4 or IPv6. The result is unconditionally stored
+@@ -1425,6 +1428,7 @@
+   [ZEBRA_ROUTE_HSLS]    = 4,
+   [ZEBRA_ROUTE_BABEL]   = 2,
+   [ZEBRA_ROUTE_NHRP]    = 2,
++  [ZEBRA_ROUTE_SIG]     = 1,
+ };
+
+ /* Look into the RN and queue it into one or more priority queues,
+--- a/lib/log.c
++++ b/lib/log.c
+@@ -975,7 +975,7 @@
+ 	return ZEBRA_ROUTE_KERNEL;
+       else if (strncmp (s, "c", 1) == 0)
+ 	return ZEBRA_ROUTE_CONNECT;
+-      else if (strncmp (s, "s", 1) == 0)
++      else if (strncmp (s, "st", 2) == 0)
+ 	return ZEBRA_ROUTE_STATIC;
+       else if (strncmp (s, "r", 1) == 0)
+ 	return ZEBRA_ROUTE_RIP;
+@@ -989,6 +989,8 @@
+ 	return ZEBRA_ROUTE_BABEL;
+       else if (strncmp (s, "n", 1) == 0)
+ 	return ZEBRA_ROUTE_NHRP;
++      else if (strncmp (s, "si", 2) == 0)
++	return ZEBRA_ROUTE_SIG;
+     }
+   if (afi == AFI_IP6)
+     {
+@@ -996,7 +998,7 @@
+ 	return ZEBRA_ROUTE_KERNEL;
+       else if (strncmp (s, "c", 1) == 0)
+ 	return ZEBRA_ROUTE_CONNECT;
+-      else if (strncmp (s, "s", 1) == 0)
++      else if (strncmp (s, "st", 2) == 0)
+ 	return ZEBRA_ROUTE_STATIC;
+       else if (strncmp (s, "r", 1) == 0)
+ 	return ZEBRA_ROUTE_RIPNG;
+@@ -1010,6 +1012,8 @@
+ 	return ZEBRA_ROUTE_BABEL;
+       else if (strncmp (s, "n", 1) == 0)
+ 	return ZEBRA_ROUTE_NHRP;
++      else if (strncmp (s, "si", 2) == 0)
++	return ZEBRA_ROUTE_SIG;
+     }
+   return -1;
+ }

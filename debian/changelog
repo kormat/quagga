@@ -1,3 +1,9 @@
+quagga (1.2.4-2+ana0) xenial; urgency=medium
+
+  * Add new route type ZEBRA_ROUTE_SIG
+
+ -- Sam Hitz <samuel.hitz@gmail.com>  Thu, 03 May 2018 14:05:56 +0200
+
 quagga (1.2.4-2) unstable; urgency=low
 
   * Correct previous changelog entry for CVE numbers
