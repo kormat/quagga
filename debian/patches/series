@@ -5,3 +5,4 @@
 0009-Fix-typo-in-dump-bgp-help-text.patch
 0010-Patch-init-scripts-for-Debian.patch
 0011-Add-SIG-Route-Type.patch
+0012-Make-Zserv-Sock-GroupWriteable.patch

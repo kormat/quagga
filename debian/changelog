@@ -1,3 +1,9 @@
+quagga (1.2.4-2+ana1) xenial; urgency=medium
+
+  * Make zerv socket group read/writeable 
+
+ -- Sam Hitz <samuel.hitz@gmail.com>  Fri, 25 May 2018 10:29:35 +0200
+
 quagga (1.2.4-2+ana0) xenial; urgency=medium
 
   * Add new route type ZEBRA_ROUTE_SIG
