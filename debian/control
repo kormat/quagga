@@ -57,6 +57,9 @@ Description: network routing daemons (metapackage)
  a Route Reflector.
  .
  This metapackage depends on the full suite of Quagga routing daemons.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-core
 Architecture: any
@@ -104,6 +107,9 @@ Description: network routing daemons (core abstraction layer)
  .
  This package provides the zebra daemon, vtysh shell, and framework used by the
  protocol-specific daemons.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-doc
 Section: doc
@@ -119,6 +125,9 @@ Description: network routing daemons (documentation)
  well as the IPv6 versions of these.
  .
  This package contains the extended documentation.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-bgpd
 Architecture: any
@@ -136,6 +145,9 @@ Description: BGP4/BGP4+ routing daemon
  well as the IPv6 versions of these.
  .
  This package contains the BGP4/BGP4+ routing daemon.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-isisd
 Architecture: any
@@ -153,6 +165,9 @@ Description: IS-IS routing daemon
  well as the IPv6 versions of these.
  .
  This package contains the IS-IS routing daemon.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ospf6d
 Architecture: any
@@ -170,6 +185,9 @@ Description: OSPF6 routing daemon
  well as the IPv6 versions of these.
  .
  This package contains the OSPF6 routing daemon.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ospfd
 Architecture: any
@@ -187,6 +205,9 @@ Description: OSPF routing daemon
  well as the IPv6 versions of these.
  .
  This package contains the OSPF routing daemon.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-pimd
 Architecture: any
@@ -206,6 +227,9 @@ Description: PIM routing daemon
  well as the IPv6 versions of these.
  .
  This package contains the PIM routing daemon.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ripd
 Architecture: any
@@ -223,6 +247,9 @@ Description: RIPv1 routing daemon
  well as the IPv6 versions of these.
  .
  This package contains the RIPv1/RIPv2 routing daemon.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ripngd
 Architecture: any
@@ -240,3 +267,6 @@ Description: RIPng routing daemon
  well as the IPv6 versions of these.
  .
  This package contains the RIPng routing daemon.
+ .
+ This package is built from a version of Quagga patched by Anapaya Systems.
+ The relevant source can be found at: https://github.com/Anapaya/quagga
