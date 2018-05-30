@@ -58,7 +58,7 @@ Description: network routing daemons (metapackage)
  .
  This metapackage depends on the full suite of Quagga routing daemons.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-core
@@ -108,9 +108,8 @@ Description: network routing daemons (core abstraction layer)
  This package provides the zebra daemon, vtysh shell, and framework used by the
  protocol-specific daemons.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
-
 
 Package: quagga-doc
 Section: doc
@@ -127,7 +126,7 @@ Description: network routing daemons (documentation)
  .
  This package contains the extended documentation.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-bgpd
@@ -147,7 +146,7 @@ Description: BGP4/BGP4+ routing daemon
  .
  This package contains the BGP4/BGP4+ routing daemon.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-isisd
@@ -167,7 +166,7 @@ Description: IS-IS routing daemon
  .
  This package contains the IS-IS routing daemon.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ospf6d
@@ -187,7 +186,7 @@ Description: OSPF6 routing daemon
  .
  This package contains the OSPF6 routing daemon.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ospfd
@@ -207,7 +206,7 @@ Description: OSPF routing daemon
  .
  This package contains the OSPF routing daemon.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-pimd
@@ -229,7 +228,7 @@ Description: PIM routing daemon
  .
  This package contains the PIM routing daemon.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ripd
@@ -249,7 +248,7 @@ Description: RIPv1 routing daemon
  .
  This package contains the RIPv1/RIPv2 routing daemon.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
 
 Package: quagga-ripngd
@@ -269,5 +268,5 @@ Description: RIPng routing daemon
  .
  This package contains the RIPng routing daemon.
  .
- This package is built from a version of Quagga patched by the SCION project.
+ This package is built from a version of Quagga patched by the Anapaya Systems.
  The relevant source can be found at: https://github.com/Anapaya/quagga
